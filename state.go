@@ -10,12 +10,12 @@ type State struct {
 	tick       int
 	width      int
 	height     int
-	players    map[int]*Player
+	players    map[int]Player
 	cellMatrix [][]CellState
 }
 
 func (r *State) addPlayer(id, x, y int) {
-	r.players[id] = &Player{
+	r.players[id] = Player{
 		id: id,
 		position: Position{
 			x: x,

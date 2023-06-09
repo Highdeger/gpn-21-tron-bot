@@ -9,17 +9,17 @@ type Player struct {
 	direction Direction
 }
 
-func (p *Player) setPosition(x, y int) {
+func (p Player) setPosition(x, y int) {
 	p.history = append(p.history, Position{p.position.x, p.position.y})
 	p.position.x = x
 	p.position.y = y
 }
 
-func (p *Player) forward() Direction {
+func (p Player) forward() Direction {
 	return p.direction
 }
 
-func (p *Player) left() Direction {
+func (p Player) left() Direction {
 	switch p.direction {
 	case up:
 		return left
@@ -34,7 +34,7 @@ func (p *Player) left() Direction {
 	}
 }
 
-func (p *Player) right() Direction {
+func (p Player) right() Direction {
 	switch p.direction {
 	case up:
 		return right

@@ -40,7 +40,7 @@ func init() {
 		tick:       0,
 		width:      0,
 		height:     0,
-		players:    make(map[int]*Player),
+		players:    make(map[int]Player),
 		cellMatrix: make([][]CellState, 0, 0),
 	}
 

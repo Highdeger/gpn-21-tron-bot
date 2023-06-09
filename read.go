@@ -71,12 +71,12 @@ func handleGame(width, height, id int) {
 	state.tick = 0
 	state.width = width
 	state.height = height
-	state.players = make(map[int]*Player)
+	state.players = make(map[int]Player)
 	state.cellMatrix = make([][]CellState, width, height)
 
 	playerId = id
 
-	state.players[id] = &Player{
+	state.players[id] = Player{
 		id: id,
 		position: Position{
 			x: 0,
