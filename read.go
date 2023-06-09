@@ -21,6 +21,8 @@ func read() {
 		}
 
 		if n > 0 {
+			fmt.Printf("READ => %s\n", string(b))
+
 			s := strings.Split(string(b), "\n")[0]
 			parts := strings.Split(s, "|")
 			action := Action(parts[0])
