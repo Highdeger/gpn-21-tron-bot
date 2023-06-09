@@ -48,22 +48,3 @@ func init() {
 	playerId = -1
 	wg = &sync.WaitGroup{}
 }
-
-// func Read2() {
-// 		case "die":
-// 			for i := 1; i < len(args); i++ {
-// 				id := getInt(args[i])
-// 				_, exists := players[id]
-// 				if exists {
-// 					delete(players, id)
-// 				}
-// 			}
-// 		case "win", "lose":
-// 			// running = false
-// 		}
-// 			}
-// 		}
-// 	}
-
-// 	wg.Done()
-// }
