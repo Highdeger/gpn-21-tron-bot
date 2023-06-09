@@ -51,3 +51,26 @@ func (r *State) printStatus() {
 		time.Sleep(1 * time.Second)
 	}
 }
+
+func (r *State) getCell(x, y int) CellState {
+	if x >= r.width {
+		x = x - r.width
+	}
+
+	if y >= r.height {
+		y = y - r.height
+	}
+
+	return r.cellMatrix[x][y]
+}
+
+func (r *State) checkSpacesAhead(x, y, depth int, direction Direction) [3]int {
+	switch direction {
+	case up:
+	case down:
+	case left:
+	case right:
+	}
+
+	return [3]int{}
+}

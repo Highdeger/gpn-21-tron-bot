@@ -1,7 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"io"
+	"os"
 	"strings"
 )
 
@@ -16,48 +19,70 @@ func read() {
 		b = make([]byte, 1024)
 
 		n, err = conn.Read(b)
-		if err != nil {
+		if err != nil && !errors.Is(err, io.EOF) {
 			panic(fmt.Sprintf("read error: %s\n", err))
 		}
 
 		if n > 0 {
-			fmt.Printf("READ => %s\n", string(b))
+			s := string(b)
+			s = strings.TrimSpace(s)
+			s = strings.Trim(s, "\n\x00")
 
-			s := strings.Split(string(b), "\n")[0]
-			parts := strings.Split(s, "|")
-			action := Action(parts[0])
-			args := parts[1:]
-			handle(action, args...)
+			// fmt.Printf("READ (%d) (contains newline: %t) => %s\n", len(s), strings.Contains(s, "\n"), s)
+
+			splited := strings.Split(s, "|")
+			action := splited[0]
+			args := strings.Join(splited[1:], "|")
+
+			handle(Action(action), args)
+
+			// for _, line := range strings.Split(s, "\n") {
+			// 	line = strings.TrimSpace(line)
+
+			// 	// fmt.Printf("LINE => %s\n", string(b))
+
+			// 	parts := strings.Split(line, "|")
+			// 	action := Action(parts[0])
+			// 	args := parts[1:]
+			// 	handle(action, args...)
+			// }
 		}
 	}
 
 	wg.Done()
 }
 
-func handle(action Action, args ...string) {
+func handle(action Action, rawArgs string) {
+	splited := strings.Split(rawArgs, "|")
+
 	switch action {
 	case actionMotd:
-		handleMotd(args[0])
+		handleMotd(splited[0])
 	case actionError:
-		handleError(args[0])
+		handleError(splited[0])
 	case actionGame:
-		handleGame(getInt(args[0]), getInt(args[1]), getInt(args[2]))
+		handleGame(getInt(splited[0]), getInt(splited[1]), getInt(splited[2]))
 	case actionPos:
-		handlePos(getInt(args[0]), getInt(args[1]), getInt(args[2]))
+		lines := strings.Split(rawArgs, "\n")
+		for _, line := range lines {
+			fmt.Printf("line: %s\n", line)
+			splited := strings.Split(line, "|")
+			handlePos(getInt(splited[1]), getInt(splited[2]), getInt(splited[3]))
+		}
 	case actionTick:
 		handleTick()
 	case actionDie:
 		ids := make([]int, 0)
-		for _, s := range args {
+		for _, s := range splited {
 			ids = append(ids, getInt(s))
 		}
 		handleDie(ids...)
 	case actionMessage:
-		handleMessage(getInt(args[0]), args[1])
+		handleMessage(getInt(splited[0]), splited[1])
 	case actionWin:
-		handleWin(getInt(args[0]), getInt(args[1]))
+		handleWin(getInt(splited[0]), getInt(splited[1]))
 	case actionLose:
-		handleLose(getInt(args[0]), getInt(args[1]))
+		handleLose(getInt(splited[0]), getInt(splited[1]))
 	default:
 		fmt.Printf("unknown action: %s\n", action)
 	}
@@ -101,17 +126,12 @@ func handlePos(id, x, y int) {
 }
 
 func handleTick() {
-	move(up)
-	// switch state.tick % 4 {
-	// case 0:
-	// 	move(up)
-	// case 1:
-	// 	move(left)
-	// case 2:
-	// 	move(up)
-	// case 3:
-	// 	move(right)
-	// }
+	switch os.Args[1] {
+	case "zigzag":
+		zigzag()
+	default:
+		move(up)
+	}
 
 	state.addTick()
 }
