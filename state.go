@@ -17,11 +17,11 @@ type State struct {
 func (r *State) addPlayer(id, x, y int) {
 	r.players[id] = &Player{
 		id: id,
-		position: &Position{
+		position: Position{
 			x: x,
 			y: y,
 		},
-		history:   make([]*Position, 0),
+		history:   make([]Position, 0),
 		direction: up,
 	}
 }
@@ -32,19 +32,21 @@ func (r *State) addTick() {
 
 func (r *State) printStatus() {
 	for {
-		playersInfoBuilder := strings.Builder{}
+		if r.tick != 0 {
+			playersInfoBuilder := strings.Builder{}
 
-		for i, player := range r.players {
-			if i != 0 {
-				playersInfoBuilder.WriteString("|")
+			for i, player := range r.players {
+				if i != 0 {
+					playersInfoBuilder.WriteString("|")
+				}
+
+				playersInfoBuilder.WriteString(fmt.Sprintf("%d>>%d:%d", player.id, player.position.x, player.position.y))
 			}
 
-			playersInfoBuilder.WriteString(fmt.Sprintf("%d>>%d:%d", player.id, player.position.x, player.position.y))
+			playersInfoBuilder.WriteString("\n")
+
+			fmt.Printf("ticks: %d, players: %s\n", r.tick, playersInfoBuilder.String())
 		}
-
-		playersInfoBuilder.WriteString("\n")
-
-		fmt.Printf("ticks: %d, players: %s\n", r.tick, playersInfoBuilder.String())
 
 		time.Sleep(1 * time.Second)
 	}

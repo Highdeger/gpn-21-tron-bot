@@ -78,11 +78,11 @@ func handleGame(width, height, id int) {
 
 	state.players[id] = &Player{
 		id: id,
-		position: &Position{
+		position: Position{
 			x: 0,
 			y: 0,
 		},
-		history:   make([]*Position, 0),
+		history:   make([]Position, 0),
 		direction: up,
 	}
 }

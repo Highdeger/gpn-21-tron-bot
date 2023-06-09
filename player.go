@@ -4,14 +4,15 @@ import "fmt"
 
 type Player struct {
 	id        int
-	position  *Position
-	history   []*Position
+	position  Position
+	history   []Position
 	direction Direction
 }
 
 func (p *Player) setPosition(x, y int) {
-	p.history = append(p.history, &Position{p.position.x, p.position.y})
-	p.position.set(x, y)
+	p.history = append(p.history, Position{p.position.x, p.position.y})
+	p.position.x = x
+	p.position.y = y
 }
 
 func (p *Player) forward() Direction {
