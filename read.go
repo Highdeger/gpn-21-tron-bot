@@ -52,8 +52,10 @@ func handle(action Action, args ...string) {
 		handleDie(ids...)
 	case actionMessage:
 		handleMessage(getInt(args[0]), args[1])
-	case actionWin, actionLose:
-		handleWinOrLose(getInt(args[0]), getInt(args[1]))
+	case actionWin:
+		handleWin(getInt(args[0]), getInt(args[1]))
+	case actionLose:
+		handleLose(getInt(args[0]), getInt(args[1]))
 	default:
 		fmt.Printf("unknown action: %s\n", action)
 	}
@@ -97,16 +99,17 @@ func handlePos(id, x, y int) {
 }
 
 func handleTick() {
-	switch state.tick % 4 {
-	case 0:
-		move(up)
-	case 1:
-		move(left)
-	case 2:
-		move(up)
-	case 3:
-		move(right)
-	}
+	move(up)
+	// switch state.tick % 4 {
+	// case 0:
+	// 	move(up)
+	// case 1:
+	// 	move(left)
+	// case 2:
+	// 	move(up)
+	// case 3:
+	// 	move(right)
+	// }
 
 	state.addTick()
 }
@@ -129,6 +132,11 @@ func handleMessage(id int, message string) {
 	fmt.Printf("message from the player '%d': %s\n", id, message)
 }
 
-func handleWinOrLose(wins, loses int) {
+func handleWin(wins, loses int) {
 	fmt.Printf("player '%d' wins: %d, loses: %d, ratio: %.3f\n", playerId, wins, loses, float64(wins)/float64(wins+loses))
+}
+
+func handleLose(wins, loses int) {
+	fmt.Printf("player '%d' wins: %d, loses: %d, ratio: %.3f\n", playerId, wins, loses, float64(wins)/float64(wins+loses))
+	running = false
 }

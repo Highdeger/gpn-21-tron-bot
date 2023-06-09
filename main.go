@@ -36,6 +36,11 @@ func init() {
 		panic(err)
 	}
 
+	wg = &sync.WaitGroup{}
+	running = true
+}
+
+func resetState() {
 	state = State{
 		tick:       0,
 		width:      0,
@@ -44,7 +49,5 @@ func init() {
 		cellMatrix: make([][]CellState, 0, 0),
 	}
 
-	running = true
 	playerId = -1
-	wg = &sync.WaitGroup{}
 }
